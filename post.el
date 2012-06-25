@@ -349,12 +349,12 @@ is very primitive), you can type \\[fill-paragraph] to rewrap the paragraph."
 
 (defcustom post-mail-message "mutt-[a-z0-9]+-[0-9]+-[0-9]+.*\\'"
   "*Regular expression which matches your mailer's temporary files."
-  :type 'string
+  :type 'regexp
   :group 'post)
 
 (defcustom post-news-posting "\\.\\(followup\\|letter\\|article\\)$"
   "*Regular expression which matches your news reader's composition files."
-  :type 'string
+  :type 'regexp
   :group 'post)
 
 (defcustom post-backup-original nil
@@ -465,6 +465,7 @@ post-should-prompt-for-attachment is 'Smart'."
 (defcustom post-quote-start "> "
   "Pattern which is added (or removed) at the beginning of the line by
 comment-region"
+  :type 'string
   :group 'post)
 
 (defcustom post-email-address-pattern
