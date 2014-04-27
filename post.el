@@ -10,7 +10,7 @@
 ;; information. Send us your feature requests and patches, and we'll try
 ;; to integrate everything.
 
-;;; Maintainers: Rob Reid <rreid@nrao.edu> and
+;;; Maintainers: Rob Reid <barlennan@gmail.com> and
 ;;;              Philip J. Hollenback <philiph@pobox.com>
 
 ;;; Keywords: mail
@@ -56,7 +56,7 @@
 ;;;
 ;;; Revision History
 ;;;
-;;; Revision 2.403  2014/04/26 21:01:30  rreid
+;;; Revision 2.41  2014/04/26 21:01:30  rreid
 ;;; Adopted Stefan-W. Hahn's suggestion to replace next-line with forward-line
 ;;; to work around a bug with some emacs versions, and updated my email address.
 ;;;
