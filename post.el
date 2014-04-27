@@ -1,9 +1,8 @@
-;	$Id: post.el,v 1.10 2008/02/24 23:49:23 rreid Exp $
 ;; post.el --- Use (X?)Emacs(client) as an external editor for mail and news.
  
 ;;; Authors: Eric Kidd <eric.kidd@pobox.com>,
 ;;;          Dave Pearson <davep@davep.org>,
-;;;          Rob Reid <rreid@nrao.edu>,
+;;;          Rob Reid <barlennan@gmail.com>,
 ;;;          Roland Rosenfeld <roland@spinnaker.de>
 
 ;; This is free software distributed under the GPL, yadda, yadda, yadda.
@@ -33,9 +32,7 @@
 ;; your sitewide default.el to (require 'post).
 ;;
 ;; You may find the latest version of this mode at
-;; http://www.cv.nrao.edu/~rreid/software/email/ or possibly
 ;; http://sourceforge.net/projects/post-mode/
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -59,16 +56,9 @@
 ;;;
 ;;; Revision History
 ;;;
-;;; $Log: post.el,v $
-;;; Revision 1.10  2008/02/24 23:49:23  rreid
-;;; *** empty log message ***
-;;;
-;;; Revision 1.9  2008/02/24 23:46:23  rreid
-;;; I really hate the way RCS/VC mucks around with the version number and log.
-;;; It's not as dwim as it thinks it is.
-;;;
-;;; Revision 1.8  2008/02/24 23:43:46  rreid
-;;; Updated email address.
+;;; Revision 2.403  2014/04/26 21:01:30  rreid
+;;; Adopted Stefan-W. Hahn's suggestion to replace next-line with forward-line
+;;; to work around a bug with some emacs versions, and updated my email address.
 ;;;
 ;;; Revision 2.402  2008/02/24 23:31:19  rreid
 ;;; Emacs 22 finally fixed (how-many) to return an int instead of a string,
@@ -291,7 +281,7 @@
   ;; The number of optional arguments for read-string seems to increase
   ;; sharply with (emacs-version).  Since old versions of emacs are a large
   ;; source of bug reports it might be worth writing (or looking for)
-  ;; (bug-report reid@astro.utoronto.ca) which emails me the result of
+  ;; (bug-report barlennan@gmail.com) which emails me the result of
   ;; (emacs-version) along with a user supplied description of the problem.
   ;; GNU Emacs 19.28.1 only has INITIAL-STRING as an optional argument.
   ;; 19.34.1 has (read-string PROMPT &optional INITIAL-INPUT HISTORY).  20.2.1
@@ -718,7 +708,7 @@ post-signature-text-face)
   (goto-char (point-min))
   ;; If the message has header, slide downward.
   (and header-mode (save-match-data (re-search-forward "^$" nil t))
-       (next-line 1)))
+       (forward-line)))
 
 (defun post-goto-signature ()
   "Go to the beginning of the message signature."
@@ -909,7 +899,7 @@ the signatures in `post-variable-signature-source' must be separated by
   (list-directory (concat post-signature-directory
                           post-signature-wildcard) t)
   (pop-to-buffer "*Directory*")
-  (next-line 1)
+  (forward-line)
   (copy-to-buffer "*Post-Select-Signature*" (point) (point-max))
   (kill-buffer "*Directory*")
   (pop-to-buffer "*Post-Select-Signature*")
