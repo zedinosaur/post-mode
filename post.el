@@ -56,7 +56,7 @@
 ;;;
 ;;; Revision History
 ;;;
-;;; Revision 2.41  2014/04/26 21:01:30  rreid
+;;; Revision 2.51  2014/04/26 21:01:30  rreid
 ;;; Adopted Stefan-W. Hahn's suggestion to replace next-line with forward-line
 ;;; to work around a bug with some emacs versions, and updated my email address.
 ;;;
