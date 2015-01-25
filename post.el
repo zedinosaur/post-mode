@@ -5,13 +5,23 @@
 ;;;          Rob Reid <barlennan@gmail.com>,
 ;;;          Roland Rosenfeld <roland@spinnaker.de>
 
-;; This is free software distributed under the GPL, yadda, yadda, yadda.
-;; It has no warranty. See the GNU General Public License for more
-;; information. Send us your feature requests and patches, and we'll try
-;; to integrate everything.
+;;; Copyright 1999, 2002, 2004, 2008, 2014 Eric Kidd, Dave Pearson, Rob Reid,
+;;; and Roland Rosenfeld.
+;;; This program is free software: you can redistribute it and/or modify
+;;; it under the terms of the GNU General Public License as published by
+;;; the Free Software Foundation, either version 3 of the License, or
+;;; (at your option) any later version.
+;;;
+;;; This program is distributed in the hope that it will be useful,
+;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;;; GNU General Public License for more details.
+;;;
+;;; You should have received a copy of the GNU General Public License
+;;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-;;; Maintainers: Rob Reid <barlennan@gmail.com> and
-;;;              Philip J. Hollenback <philiph@pobox.com>
+;;; Maintainers: Eric Dorland <eric@kuroneko.ca> and
+;;;              Rob Reid <barlennan@gmail.com>
 
 ;;; Keywords: mail
 
