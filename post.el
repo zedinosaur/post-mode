@@ -782,8 +782,7 @@ Argument END end of region."
   (interactive "r")
   (while (< start end)
     (goto-char start)
-    (insert "_")
-    (insert (char-to-string 8))
+    (insert "_" (char-to-string 8))
     (setq start (+ start 3))
     (setq end   (+ end   2))))
 
@@ -857,8 +856,7 @@ the signatures in `post-variable-signature-source' must be separated by
 		     (nth r marks-st) (nth r marks-end))))
 	(kill-buffer (current-buffer)))
       (goto-char (post-kill-signature))
-      (insert-string "-- \n")
-      (insert sig)
+      (insert "-- \n" sig)
       (if (file-readable-p post-fixed-signature-source)
 	  (insert-file-contents post-fixed-signature-source)
 	(insert "I really need a `post-fixed-signature-source'!\n")))))
@@ -894,8 +892,7 @@ the signatures in `post-variable-signature-source' must be separated by
     (let ((sig (buffer-substring-no-properties sig-start sig-end)))
       (switch-to-buffer post-select-signature-last-buffer)
       (goto-char (post-kill-signature))
-      (insert-string "-- \n")
-      (insert sig))
+      (insert "-- \n" sig))
     (if (file-readable-p post-fixed-signature-source)
 	(insert-file-contents post-fixed-signature-source))
     (post-select-signature-quit)))
@@ -929,7 +926,7 @@ the signatures in `post-variable-signature-source' must be separated by
     (setq sig-to-load (buffer-substring-no-properties sig-start (point)))
     (switch-to-buffer post-select-signature-last-buffer)
     (goto-char (post-kill-signature))
-    (insert-string "-- \n")
+    (insert "-- \n")
     (insert-file (concat post-signature-directory sig-to-load))
     (message "Signature set to %s%s" post-signature-directory sig-to-load)
     (post-select-signature-quit)))
@@ -1187,7 +1184,7 @@ Optional argument ARG ."
       (when (re-search-forward (concat "^\\($\\|" field ": \\)"))
 	(if (looking-at "^$")
 	    (progn
-	      (insert-string field ": \n")
+	      (insert field ": \n")
 	      (forward-char -1))
 	  (header-position-on-value))))))
 
@@ -1220,8 +1217,8 @@ Argument DESCRIPTION MIME description."
 	  (widen)
 	  (goto-char (point-min))
 	  (search-forward-regexp "^$")
-	  (insert-string (concat "Attach: " (file-truename file) " "
-				 description "\n"))
+	  (insert (concat "Attach: " (file-truename file) " "
+                      description "\n"))
 	  (message (concat "Attached '" file "'."))
 	  (setq post-has-attachment t))))))
 
@@ -1329,7 +1326,7 @@ Optional argument DEFAULT ."
     (cond ((post-find-header-line header)
 	   (beginning-of-line)
 	   (kill-line)
-	   (insert-string (concat header ": " value)))
+	   (insert header ": " value))
 	  (t
 	   (header-append-value header value))))
   (message "%s set to %s" header value))
@@ -1338,7 +1335,7 @@ Optional argument DEFAULT ."
   "Add a HEADER and set it's VALUE (if header exists, will add multiple headers)."
   (goto-char (point-min))
   (search-forward-regexp "^$" nil t)
-  (insert-string (concat header ": " value "\n")))
+  (insert header ": " value "\n"))
 
 ;;; Setup the mode map for the select-signature buffer.
 (if post-select-signature-mode-map nil
