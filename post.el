@@ -1217,7 +1217,10 @@ Argument DESCRIPTION MIME description."
 	  (widen)
 	  (goto-char (point-min))
 	  (search-forward-regexp "^$")
-	  (insert (concat "Attach: " (file-truename file) " "
+	  (insert (concat "Attach: " (replace-regexp-in-string
+                                  " "
+                                  "\\\\ "
+                                  (file-truename file)) " "
                       description "\n"))
 	  (message (concat "Attached '" file "'."))
 	  (setq post-has-attachment t))))))
