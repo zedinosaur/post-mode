@@ -347,7 +347,7 @@ is very primitive), you can type \\[fill-paragraph] to rewrap the paragraph."
   :type 'boolean
   :group 'post)
 
-(defcustom post-mail-message "mutt-[a-z0-9]+-[0-9]+-[0-9]+.*\\'"
+(defcustom post-mail-message "\\(mutt\\(ng\\)?-[a-zA-Z0-9-.]+-[0-9]+-[0-9]+\\(-[a-fA-F0-9]+\\)?\\|mutt\\(ng\\)?[a-zA-Z0-9._-]\\{6\\}\\)\\'"
   "*Regular expression which matches your mailer's temporary files."
   :type 'regexp
   :group 'post)
@@ -362,7 +362,7 @@ is very primitive), you can type \\[fill-paragraph] to rewrap the paragraph."
   :type 'boolean
   :group 'post)
 
-(defcustom post-signature-pattern "\\(--\\|Cheers,\\|\\)"
+(defcustom post-signature-pattern "\\(--\\|\\)"
   "*Pattern signifying the beginning of signatures.
 It should not contain trailing whitespace unless you know what you're doing."
   :type 'regexp
@@ -437,7 +437,7 @@ contains post-attachment-regexp."
 		 (const Always))
   :group 'post)
 
-(defcustom post-attachment-regexp "attach"
+(defcustom post-attachment-regexp "^[ \t\f]*[^>].*attach"
   "*This is what post looks for in the body if
 post-should-prompt-for-attachment is 'Smart'."
   :type 'regexp
@@ -475,7 +475,7 @@ comment-region"
   :group 'post)
 
 (defcustom post-url-pattern
-  '("\\<\\(\\(https?\\|news\\|mailto\\|ftp\\|gopher\\):\\|\\(www\\|ftp\\)\\.\\)[-~A-Za-z0-9._/%$+?#]+[A-Za-z0-9/#]" "<URL:[^ ]+>")
+  '("\\<\\(\\(https?\\|news\\|mailto\\|ftp\\|gopher\\):\\|\\(www\\|ftp\\)\\.\\)[-~A-Za-z0-9._/%$+?#:;&=]+[A-Za-z0-9/#&=]" "<URL:[^ ]+>")
   "Pattern to detect URL addresses."
   :type '(repeat regexp)
   :group 'post)
@@ -491,8 +491,8 @@ comment-region"
   :group 'post)
 
 (defcustom post-emoticon-pattern '("[0O(<{}]?[;:8B|][.,]?[-+^*o0O][{<>/\|]?[][)>(<|/\P][)>]?"
-			"\\s [(<]?[][)>(<|/\][}<>|]?[-+^*oO0][,.]?[:8][0O>]?"
-			"\\s [;:][][P)\/(]" "\\s [][)(P\/][:;]"
+			"[(<]?[][)>(<|/\][}<>|]?[-+^*oO0][,.]?[:8][0O>]?"
+			"[;:][][P)\/(]" "\\s [][)(P\/][:;]"
 				   "<[Gg]>" "<[BbSs][Gg]>")
   "*List of regular expressions that define a emoticon."
   :type '(repeat regexp)
@@ -640,11 +640,16 @@ comment-region"
   :group 'post-faces)
 
 ; Note: some faces are added later!
+
+(defvar post-quoted-text-pattern
+  "^[ \t\f]*\\(>[ \t\f]*\\)\\([-a-zA-Z]*>[ \t\f]*\\)\\([-a-zA-Z]*>.*\\)$"
+  "Regexp for recognizing quoted text")
+
 (defvar post-font-lock-keywords
   `(("^\\([A-Z][-A-Za-z0-9.]+:\\)\\(.*\\)$"
      (1 'post-header-keyword-face)
      (2 'post-header-value-face))
-    ("^[ \t\f]*\\(>[ \t\f]*\\)\\([-a-zA-Z]*>[ \t\f]*\\)\\([-a-zA-Z]*>.*\\)$"
+    (,post-quoted-text-pattern
      (1 'post-quoted-text-face)
      (2 'post-double-quoted-text-face)
      (3 'post-multiply-quoted-text-face))
@@ -1053,9 +1058,10 @@ When you finish editing this message, type \\[post-save-current-buffer-and-exit]
   (make-local-variable 'paragraph-start)
   (make-local-variable 'paragraph-separate)
   (setq paragraph-start
-	"\\([ \t\n\f]+[^ \t\n\f>]\\|[ \t\f>]*$\\)"
+	(concat "\\([ \t\n\f]+[^ \t\n\f>]\\|[ \t\f>]*$\\|.+:$\\|"
+	        post-signature-pattern " *$\\)")
 	paragraph-separate
-	"[ \t\f>]*$")
+	(concat "[ \t\f>]*$\\|.+:$\\|" post-signature-pattern " *$"))
 
   ;; XEmacs needs easy-menu-add, Emacs does not care
   (easy-menu-add post-mode-menu)
