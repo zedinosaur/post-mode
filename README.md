@@ -9,9 +9,7 @@ Installation
 
 Add the following line to the .emacs(.el) file in your home directory:
 
-```
-  (load "/your/local/path/to/this/file/post")
-```
+    (load "/your/local/path/to/this/file/post")
 
 Note that you can omit the ".el" from the file name when calling load.
 
