@@ -1,0 +1,4 @@
+# Version 2.6
+* Clarified license, GPLv3.
+* Remove old style backquotes and use of insert-string.
+* Better support for flyspell support.
