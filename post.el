@@ -689,6 +689,14 @@ post-signature-text-face)
 (defvar post-has-attachment nil
  "Whether the message has an attachment.")
 
+(defvar post-ispell-skip-alist
+  `(("^[A-Z][-A-Za-z0-9]+:")
+	("^\\(To|Cc|Bcc|From|Reply-To\\): .*$")
+    (,post-url-pattern)
+    (,post-email-address-pattern)
+    (,post-quoted-text-pattern))
+  "What ispell should skip in buffer")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Interactive Commands
@@ -1032,6 +1040,28 @@ This way they can refer back to this buffer during a compose session."
   (copy-to-buffer (get-buffer-create "*Original*")
 		  (point-min) (point-max)))
 
+;;; Mostly stolen from flyspell.el, mail-mode-flyspell-verify
+(put 'post-mode 'flyspell-mode-predicate 'post-mode-flyspell-verify)
+(defun post-mode-flyspell-verify ()
+  "This function is used for `flyspell-generic-check-word-p' in Post mode."
+  (let ((in-headers
+		 (and (save-excursion (goto-char (point-min))
+							  (re-search-forward "^$" nil t))
+			  (< (point) (match-end 0))))
+		(in-signature (save-excursion
+						(re-search-backward (concat "^" post-signature-pattern
+                                                    "[ \t\f]*$") nil t))))
+	(cond (in-headers (and (save-excursion (beginning-of-line)
+										   (looking-at "^Subject:"))
+						   (> (point) (match-end 0))))
+		  (in-signature nil)
+		  (t (save-excursion (beginning-of-line)
+							 (not (looking-at
+								   (concat "[ \t\f]*" post-quote-start))))))))
+
+(defun post-quote-newline ()
+  )
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; The Heart of Darkness
@@ -1073,6 +1103,10 @@ When you finish editing this message, type \\[post-save-current-buffer-and-exit]
   ;; Our temporary file lives in /tmp. Yuck! Compensate appropriately.
   (make-local-variable 'backup-inhibited)
   (setq backup-inhibited t)
+
+  ;; Skip certain patterns for ispell
+  ;(set (make-local-variable 'ispell-skip-region-alist)
+  ;		(append ispell-skip-region-alist post-ispell-skip-alist))
 
   (if (boundp 'font-lock-defaults)
       (make-local-variable 'font-lock-defaults))
