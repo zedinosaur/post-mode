@@ -18,4 +18,4 @@ load-path RET`, pick an appropriate directory for `post.el`, and modify
 your sitewide `default.el` to `(require 'post)`.
 
 You may find the latest version of this mode at
-http://sourceforge.net/projects/post-mode/
+http://github.com/zedinosaur/post-mode/
