@@ -884,7 +884,8 @@ the signatures in `post-variable-signature-source' must be separated by
   (setq post-select-signature-last-point (point))
   (pop-to-buffer "*Post-Select-Signature*")
   (insert-file-contents post-variable-signature-source)
-  (use-local-map post-select-signature-mode-map))
+  (use-local-map post-select-signature-mode-map)
+  (read-only-mode t))
 
 (defun post-select-signature-select-sig-from-file ()
  "*Chooses the signature the cursor is in from `post-variable-signature-source'."
@@ -927,7 +928,7 @@ the signatures in `post-variable-signature-source' must be separated by
   (kill-buffer "*Directory*")
   (pop-to-buffer "*Post-Select-Signature*")
   (use-local-map post-select-signature-mode-map)
-  (toggle-read-only t))
+  (read-only-mode t))
 
 (defun post-select-signature-select-sig-from-dir ()
   "Set the signature in the calling buffer to the one under the cursor."
