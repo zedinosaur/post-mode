@@ -98,20 +98,6 @@
 ;;; fun stuff) by typing M-x customize RET. The Post preferences can be
 ;;; found under the [Applications] [Mail] category.
 
-;; Make post mode a bit more compatible with older (i.e. <20) versions of emacs.
-;;; Code:
-(eval-and-compile
-
-  ;; If customize isn't available just use defvar instead.
-  (unless (fboundp 'defgroup)
-    (defmacro defgroup  (&rest rest) nil)
-    (defmacro defcustom (symbol init docstring &rest rest)
-      ; The "extra" braces and whitespace are for emacs < 19.29.
-      `(defvar ,symbol ,init ,docstring))
-    (defmacro defface (&rest args) nil))
-  (unless (fboundp 'buffer-substring-no-properties)
-    (fset 'buffer-substring-no-properties 'buffer-substring)))
-
 (defgroup post nil
   "Composing e-mail messages with Post.
 Emacs can run as an external editor for Mutt, the spiffy Unix mail reader
