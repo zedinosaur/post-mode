@@ -101,24 +101,6 @@
 ;; Make post mode a bit more compatible with older (i.e. <20) versions of emacs.
 ;;; Code:
 (eval-and-compile
-  ;; Dumb down read-string if necessary.
-  ;; The number of optional arguments for read-string seems to increase
-  ;; sharply with (emacs-version).  Since old versions of emacs are a large
-  ;; source of bug reports it might be worth writing (or looking for)
-  ;; (bug-report barlennan@gmail.com) which emails me the result of
-  ;; (emacs-version) along with a user supplied description of the problem.
-  ;; GNU Emacs 19.28.1 only has INITIAL-STRING as an optional argument.
-  ;; 19.34.1 has (read-string PROMPT &optional INITIAL-INPUT HISTORY).  20.2.1
-  ;; has (read-string PROMPT &optional INITIAL-INPUT HISTORY DEFAULT-VALUE
-  ;; INHERIT-INPUT-METHOD).
-  ;; Since I haven't found a way of redefining read-string without causing an
-  ;; infinite loop, please use (string-read prompt).
-  (if (< (string-to-number (substring (emacs-version)
-				      (string-match "[0-9]+\.[0-9]"
-					 (emacs-version) 5))) 20)
-      (defmacro string-read (prompt) `(read-string ,prompt))
-      (defmacro string-read (prompt)
-	`(read-string ,prompt nil nil nil t)))
 
   ;; If customize isn't available just use defvar instead.
   (unless (fboundp 'defgroup)
@@ -765,7 +747,7 @@ the signatures in `post-variable-signature-source' must be separated by
   "Prompt for an attachment."
   (interactive)
   (let ((file (read-file-name "Attach file: " nil nil t nil))
-	(description (string-read "Description: ")))
+    (description (read-string "Description: " nil nil nil t)))
     (header-attach-file file description)))
 
 ;;; Non-interactive functions
