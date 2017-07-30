@@ -1,5 +1,5 @@
 ;; post.el --- Use (X?)Emacs(client) as an external editor for mail and news.
- 
+
 ;;; Authors: Eric Kidd <eric.kidd@pobox.com>,
 ;;;          Dave Pearson <davep@davep.org>,
 ;;;          Rob Reid <barlennan@gmail.com>,
@@ -272,7 +272,7 @@
 ;;;
 ;;; Required Packages
 
-(require 'cl)
+(require 'cl-lib)
 (require 'derived)
 (require 'easymenu)
 
@@ -306,22 +306,6 @@
       (defmacro string-read (prompt)
 	`(read-string ,prompt nil nil nil t)))
 
-  ;; XEmacs gnuserv uses slightly different functions than the GNU Emacs
-  ;; server, and some people are still wasting time and CPU cycles by starting
-  ;; up a new emacs each time.
-  (fset 'post-finish (cond ((fboundp 'server-edit)
-			    'server-edit)
-			   ((fboundp 'gnuserv-kill-buffer-function)
-			    'gnuserv-kill-buffer-function)
-			   (t
-			    'save-buffers-kill-emacs)))
-;;   (cond ((fboundp 'server-edit)
-;; 	 (fset 'post-finish 'server-edit))
-;; 	((fboundp 'gnuserv-kill-buffer-function)
-;; 	 (fset 'post-finish 'gnuserv-kill-buffer-function))
-;; 	(t
-;; 	 (fset 'post-finish 'save-buffers-kill-emacs)))
-   
   ;; If customize isn't available just use defvar instead.
   (unless (fboundp 'defgroup)
     (defmacro defgroup  (&rest rest) nil)
@@ -579,6 +563,9 @@ comment-region"
   "Face used for text that is part of a signature"
   :group 'post-faces)
 
+(defvar post-signature-text-face 'post-signature-text-face
+  "Face name to use for text that is part of a signature")
+
 (defface post-email-address-text-face
   '((((class color)
       (background light))
@@ -717,7 +704,14 @@ post-signature-text-face)
   (if post-backup-original
       (kill-buffer "*Original*"))
 
-  (post-finish)
+  (cond
+    ((fboundp 'server-edit)
+      (server-edit))
+    ((fboundp 'gnuserv-kill-buffer-function)
+      (gnuserv-kill-buffer-function))
+    (t
+      (save-buffers-kill-emacs)))
+
 
   ;; Added by Rob Reid 10/13/1998 to prevent accumulating *Composing* buffers
   ;; when using (emacs|gnu)client.  Helped by Eric Marsden's Eliza example in
@@ -851,10 +845,10 @@ the signatures in `post-variable-signature-source' must be separated by
 `post-signature-sep-regexp'."
   (interactive)
   (let ((sig nil))
-    (save-excursion
-      (set-buffer (generate-new-buffer "*Post-Select-Signature*"))
-      (insert-file post-variable-signature-source)
-      (beginning-of-buffer)
+    (with-current-buffer
+      (generate-new-buffer "*Post-Select-Signature*")
+      (insert-file-contents post-variable-signature-source)
+      (goto-char (point-min))
       ;; we have 2 lists of marks since seperators are of arbitrary lenght
       (let ((marks-st (list (point-min)))
 	    (marks-end (list))
@@ -880,8 +874,9 @@ the signatures in `post-variable-signature-source' must be separated by
   (setq post-select-signature-last-buffer (current-buffer))
   (setq post-select-signature-last-point (point))
   (pop-to-buffer "*Post-Select-Signature*")
-  (insert-file post-variable-signature-source)
-  (use-local-map post-select-signature-mode-map))
+  (insert-file-contents post-variable-signature-source)
+  (use-local-map post-select-signature-mode-map)
+  (read-only-mode t))
 
 (defun post-select-signature-select-sig-from-file ()
  "*Chooses the signature the cursor is in from `post-variable-signature-source'."
@@ -924,7 +919,7 @@ the signatures in `post-variable-signature-source' must be separated by
   (kill-buffer "*Directory*")
   (pop-to-buffer "*Post-Select-Signature*")
   (use-local-map post-select-signature-mode-map)
-  (toggle-read-only t))
+  (read-only-mode t))
 
 (defun post-select-signature-select-sig-from-dir ()
   "Set the signature in the calling buffer to the one under the cursor."
@@ -940,7 +935,7 @@ the signatures in `post-variable-signature-source' must be separated by
     (switch-to-buffer post-select-signature-last-buffer)
     (goto-char (post-kill-signature))
     (insert "-- \n")
-    (insert-file (concat post-signature-directory sig-to-load))
+    (insert-file-contents (concat post-signature-directory sig-to-load))
     (message "Signature set to %s%s" post-signature-directory sig-to-load)
     (post-select-signature-quit)))
 
@@ -975,7 +970,7 @@ the signatures in `post-variable-signature-source' must be separated by
 (defun post-body-says-attach-p ()
   "Check if attach appears in the body."
   (post-goto-body)
-  
+
   ;; Aargh it's annoying that how-many returns a string,
   ;; "13 occurences" instead of a number, 13.
   ;; As of Emacs 22 how-many returns an integer number.  Consideration
@@ -1110,7 +1105,7 @@ When you finish editing this message, type \\[post-save-current-buffer-and-exit]
 
   (if (boundp 'font-lock-defaults)
       (make-local-variable 'font-lock-defaults))
-  (flet ((add-syntax-highlight (face regexps)
+  (cl-flet ((add-syntax-highlight (face regexps)
 	    (set face face)
 	    (nconc post-font-lock-keywords
 		   (loop for regexp in regexps
@@ -1135,7 +1130,7 @@ When you finish editing this message, type \\[post-save-current-buffer-and-exit]
   ;; Kill quoted sig if so required.
   (cond (post-kill-quoted-sig
 	 (post-delete-quoted-signatures)
-         (not-modified)))
+         (set-buffer-modified-p nil)))
 
   ;; Remap signature selection functions according to whether the
   ;; signatures are stored in a file or directory.
@@ -1160,7 +1155,7 @@ When you finish editing this message, type \\[post-save-current-buffer-and-exit]
   ;; Give the buffer a handy name.
   (if post-rename-buffer
       (setq post-buf (rename-buffer "*Composing*" t)))
- 
+
   ;; If this is a news posting, check the length of the References field.
   (if (post-references-p)
       (header-check-references))
@@ -1322,7 +1317,7 @@ Optional argument SHOW Whether or not to display the length."
   (let* ((header "References")
          (refs (header-get-value header))
          (len (+ (length header) (length refs) 2)))
-    (if (or (interactive-p) show)
+    (if (or (called-interactively-p "any") show)
         (message "References header is %d characters in length." len))
     len))
 
