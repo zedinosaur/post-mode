@@ -893,15 +893,7 @@ When you finish editing this message, type \\[post-save-current-buffer-and-exit]
       (defalias 'post-select-signature-select-sig
 	'post-select-signature-select-sig-from-dir)))
 
-  ;; Define mutt/slrn specific key bindings.
-  (define-key (current-local-map) "\C-c\C-b"	 'post-make-region-bold)
-  (define-key (current-local-map) "\C-c\C-u"	 'post-make-region-underlined)
-  (define-key (current-local-map) "\C-c\C-q"	 'post-quote-region)
-  (define-key (current-local-map) "\C-c\C-d\C-q" 'post-unquote-region)
-  (define-key (current-local-map) "\C-c\C-a"	 'post-attach-file)
-  (define-key (current-local-map) "\C-c\C-p"	 'post-set-return-receipt-to)
-
-  ;; Give the buffer a handy name.
+;; Give the buffer a handy name.
   (if post-rename-buffer
       (setq post-buf (rename-buffer "*Composing*" t)))
 
@@ -1150,6 +1142,7 @@ Optional argument DEFAULT ."
 (define-key post-mode-map "\C-c\C-q" 'post-quote-region)
 (define-key post-mode-map "\C-c\C-d\C-q" 'post-unquote-region)
 (define-key post-mode-map "\C-c\C-s" 'post-select-signature)
+(define-key post-mode-map "\C-c\C-a" 'post-attach-file)
 
 (define-key post-mode-map [remap server-edit]
   'post-save-current-buffer-and-exit)
