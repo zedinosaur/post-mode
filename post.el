@@ -45,13 +45,6 @@
 ;; http://github.com/zedinosaur/post-mode/
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; BUGS:
-;;
-;; Rob: I predict that some buffers (*Original*<2>, *Composing*<2>?)
-;; will be left behind if you edit more than one message at a time.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Thanks
 ;;;
@@ -473,12 +466,6 @@ post-signature-text-face)
       (gnuserv-kill-buffer-function))
     (t
       (save-buffers-kill-emacs)))
-
-
-  ;; Added by Rob Reid 10/13/1998 to prevent accumulating *Composing* buffers
-  ;; when using (emacs|gnu)client.  Helped by Eric Marsden's Eliza example in
-  ;; http://www.ssc.com/lg/issue29/marsden.html
-;  (kill-buffer post-buf)
 )
 
 (defun post-goto-body ()
@@ -1163,6 +1150,11 @@ Optional argument DEFAULT ."
 (define-key post-mode-map "\C-c\C-q" 'post-quote-region)
 (define-key post-mode-map "\C-c\C-d\C-q" 'post-unquote-region)
 (define-key post-mode-map "\C-c\C-s" 'post-select-signature)
+
+(define-key post-mode-map [remap server-edit]
+  'post-save-current-buffer-and-exit)
+(define-key post-mode-map [remap save-buffers-kill-terminal]
+  'post-save-current-buffer-and-exit)
 
 (define-key header-mode-map "\C-c\C-f\C-t" 'header-goto-to)
 (define-key header-mode-map "\C-c\C-f\C-c" 'header-goto-cc)
