@@ -62,26 +62,6 @@
 ;;; Kevin Rodgers: Answered RR's question on gnu.emacs.help on
 ;;; overwriting server-process-filter's annoying message at startup.
 
-;;; %%%%%%%%%%%% Put in .emacs %%%%%%%%%%%
-;;;
-;;; ;;; Email
-;;; (server-start)
-;;; (load "/home/reid/.mutt/post")
-;;; (defadvice server-process-filter (after post-mode-message first activate)
-;;;    "If the buffer is in post mode, overwrite the server-edit
-;;;    message with a post-save-current-buffer-and-exit message."
-;;;    (if (eq major-mode 'post-mode)
-;;;        (message
-;;;         (substitute-command-keys "Type \\[describe-mode] for help composing; \\[post-save-current-buffer-and-exit] when done."))))
-;;; ; This is also needed to see the magic message.  Set to a higher
-;;; ; number if you have a faster computer or read slower than me.
-;;; '(font-lock-verbose 1000)
-;;; ; (setq server-temp-file-regexp "mutt-")
-;;; (add-hook 'server-switch-hook
-;;;         (function (lambda()
-;;;                     (cond ((string-match "Post" mode-name)
-;;;                            (post-goto-body))))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;
 ;;; Required Packages
