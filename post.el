@@ -306,22 +306,6 @@
       (defmacro string-read (prompt)
 	`(read-string ,prompt nil nil nil t)))
 
-  ;; XEmacs gnuserv uses slightly different functions than the GNU Emacs
-  ;; server, and some people are still wasting time and CPU cycles by starting
-  ;; up a new emacs each time.
-  (fset 'post-finish (cond ((fboundp 'server-edit)
-			    'server-edit)
-			   ((fboundp 'gnuserv-kill-buffer-function)
-			    'gnuserv-kill-buffer-function)
-			   (t
-			    'save-buffers-kill-emacs)))
-;;   (cond ((fboundp 'server-edit)
-;; 	 (fset 'post-finish 'server-edit))
-;; 	((fboundp 'gnuserv-kill-buffer-function)
-;; 	 (fset 'post-finish 'gnuserv-kill-buffer-function))
-;; 	(t
-;; 	 (fset 'post-finish 'save-buffers-kill-emacs)))
-
   ;; If customize isn't available just use defvar instead.
   (unless (fboundp 'defgroup)
     (defmacro defgroup  (&rest rest) nil)
@@ -720,7 +704,14 @@ post-signature-text-face)
   (if post-backup-original
       (kill-buffer "*Original*"))
 
-  (post-finish)
+  (cond
+    ((fboundp 'server-edit)
+      (server-edit))
+    ((fboundp 'gnuserv-kill-buffer-function)
+      (gnuserv-kill-buffer-function))
+    (t
+      (save-buffers-kill-emacs)))
+
 
   ;; Added by Rob Reid 10/13/1998 to prevent accumulating *Composing* buffers
   ;; when using (emacs|gnu)client.  Helped by Eric Marsden's Eliza example in
