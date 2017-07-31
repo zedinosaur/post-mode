@@ -85,7 +85,6 @@
 ;;          post-should-prompt-for-attachment "Smart")
 ;;        (footnote-mode)
 ;;        (flyspell-mode)
-;;        (require 'boxquote))
 ;;      (add-hook 'post-mode-hook 'my-post-mode-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
