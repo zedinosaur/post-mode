@@ -84,7 +84,7 @@
 ;;          post-kill-quoted-sig t
 ;;          post-should-prompt-for-attachment "Smart")
 ;;        (footnote-mode)
-;;        (flyspell-mode)
+;;        (flyspell-mode))
 ;;      (add-hook 'post-mode-hook 'my-post-mode-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
