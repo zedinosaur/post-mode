@@ -1,3 +1,5 @@
+This is a fork of [post-mode](https://github.com/zedinosaur/post-mode), providing updates, minor bug fixes, improved documentation and configuration information. The url of this fork is: https://github.com/Boruch-Baum/post-mode
+
 post-mode
 =========
 
@@ -57,6 +59,3 @@ Installation
        (flyspell-mode))
      (add-hook 'post-mode-hook 'my-post-mode-hook)
 
-
-You may find the latest version of this mode at
-http://github.com/zedinosaur/post-mode/
