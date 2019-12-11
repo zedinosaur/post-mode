@@ -1,4 +1,8 @@
-;; post.el --- Use (X?)Emacs(client) as an external editor for mail and news.
+;; post.el --- Use Emacs(client) as an external editor for mail and news.
+
+;;; This file is a fork, maintained by Boruch Baum <boruch_baum@gmx.com>
+;;; 2017-    https://github.com/Boruch-Baum/post-mode
+;;; Original colophon follows:
 
 ;;; Authors: Eric Kidd <eric.kidd@pobox.com>,
 ;;;          Dave Pearson <davep@davep.org>,
@@ -31,8 +35,10 @@
 ;; slrn, or most email and newsreaders that allow you to use an
 ;; external editor.
 ;;
-;; You may find the latest version of this mode at
+;; The orignal version of this mode was/is:
 ;;   https://github.com/zedinosaur/post-mode
+;; This forked version is:
+;;   https://github.com/Boruch-Baum/post-mode
 
 ;; Installation:
 ;;
@@ -84,7 +90,8 @@
 ;;          post-kill-quoted-sig t
 ;;          post-should-prompt-for-attachment "Smart")
 ;;        (footnote-mode)
-;;        (flyspell-mode))
+;;        (flyspell-mode)
+;;        (require 'boxquote))
 ;;      (add-hook 'post-mode-hook 'my-post-mode-hook)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -600,10 +607,11 @@ Argument END End of region to be quoted."
   (uncomment-region beg end))
 
 ; From Dave Pearson, July 15, 2000
-(defun* split-quoted-paragraph (&optional (quote-string "> "))
+(defun split-quoted-paragraph &optional quote-string)
   "Split a quoted paragraph at point, keeping the quote."
   (interactive)
-  (if (save-excursion
+  (let ((quote-string (or quote-string "> ")))
+       (if (save-excursion
         (beginning-of-line)
         (looking-at (regexp-quote quote-string)))
       (progn
@@ -614,7 +622,7 @@ Argument END End of region to be quoted."
                          (length quote-string))))
           (save-excursion
             (insert (format "\n\n%s%s" quote-string (make-string spaces ? ))))))
-    (error "Can't see a quoted paragraph here")))
+    (error "Can't see a quoted paragraph here"))))
 
 (defun post-random-signature ()
   "Randomize the signature.
