@@ -586,19 +586,49 @@ Argument END end of region."
     (setq start (+ start 3))
     (setq end   (+ end   2))))
 
-(defun post-quote-region (beg end)
+(defun post-quote-region (beg end &optional arg)
   "Quote a region using the `post-quote-start' variable.
-Argument BEG Beginning of region to be quoted.
-Argument END End of region to be quoted."
-  (interactive "r")
-  (comment-region beg end))
+Arguments BEG and END are the beginning and end positions of the
+region to be quoted; Interactively, these are automatically set.
 
-(defun post-unquote-region (beg end)
+Use the optional prefix-argument to repeat the operation however
+many times."
+  (interactive "r\np")
+  (when (or (not arg)
+            (< arg 1))
+    (setq arg 1))
+  (while (not (zerop arg))
+    (comment-region beg end)
+    (insert "\n")
+    (forward-char -1)
+    (fill-paragraph nil (list (point) (mark)))
+    (delete-char 1)
+    (goto-char (point))
+    (setq arg (1- arg)
+          beg (point)
+          end (mark))))
+
+(defun post-unquote-region (beg end &optional arg)
   "Un-quote a region one level using the `post-quote-start' variable.
-Argument BEG Beginning of region to be quoted.
-Argument END End of region to be quoted."
-  (interactive "r")
-  (uncomment-region beg end))
+Arguments BEG and END are the beginning and end positions of the
+region to be quoted; Interactively, these are automatically set.
+
+Use the optional prefix-argument to repeat the operation however
+many times."
+  (interactive "r\np")
+  (when (or (not arg)
+            (< arg 1))
+    (setq arg 1))
+  (while (not (zerop arg))
+    (uncomment-region beg end)
+    (insert "\n")
+    (forward-char -1)
+    (fill-paragraph nil (list (point) (mark)))
+    (delete-char 1)
+    (goto-char (point))
+    (setq arg (1- arg)
+          beg (point)
+          end (mark))))
 
 ; From Dave Pearson, July 15, 2000
 (defun split-quoted-paragraph (&optional quote-string)

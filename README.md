@@ -3,8 +3,9 @@ This is a fork of [post-mode](https://github.com/zedinosaur/post-mode), providin
 post-mode
 =========
 
-This is a major mode for use with [mutt](http://www.mutt.org/), slrn, or most
-email and newsreaders that allow you to use an external editor.
+This is a major mode for use with [mutt](http://www.mutt.org/),
+neomutt (https://neomutt.org), slrn (http://slrn.sourceforge.net/), or
+most email and newsreaders that allow you to use an external editor.
 
 Installation
 ------------
@@ -59,3 +60,14 @@ Installation
        (flyspell-mode))
      (add-hook 'post-mode-hook 'my-post-mode-hook)
 
+New in this fork
+================
+
+I'm only starting this list in December 2019, so this list will be
+missing changes of the previous few years until I go back and look at
+the diffs.
+
+* Improved quoting and unquoting of regions: You can now use the
+  prefix argument to perform either operation multiple times, and the
+  operation automatically autfills, so the result is properly
+  formatted.
