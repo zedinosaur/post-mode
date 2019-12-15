@@ -9,12 +9,13 @@
 ;;;          Rob Reid <barlennan@gmail.com>,
 ;;;          Roland Rosenfeld <roland@spinnaker.de>
 
-;;; Copyright 1999, 2002, 2004, 2008, 2014 Eric Kidd, Dave Pearson, Rob Reid,
-;;; and Roland Rosenfeld.
-;;; This program is free software: you can redistribute it and/or modify
-;;; it under the terms of the GNU General Public License as published by
-;;; the Free Software Foundation, either version 3 of the License, or
-;;; (at your option) any later version.
+;;; Copyright 1999, 2002, 2004, 2008, 2014 Eric Kidd, Dave Pearson,
+;;; Rob Reid, and Roland Rosenfeld.
+
+;;; This program is free software: you can redistribute it and/or
+;;; modify it under the terms of the GNU General Public License as
+;;; published by the Free Software Foundation, either version 3 of the
+;;; License, or (at your option) any later version.
 ;;;
 ;;; This program is distributed in the hope that it will be useful,
 ;;; but WITHOUT ANY WARRANTY; without even the implied warranty of
@@ -32,8 +33,9 @@
 ;;; Commentary:
 ;;
 ;; This is a major mode for use with mutt (http://www.mutt.org/),
-;; slrn, or most email and newsreaders that allow you to use an
-;; external editor.
+;; neomutt (https://neomutt.org), slrn (http://slrn.sourceforge.net/),
+;; or most email and newsreaders that allow you to use an external
+;; editor.
 ;;
 ;; The orignal version of this mode was/is:
 ;;   https://github.com/zedinosaur/post-mode
@@ -494,7 +496,7 @@ post-signature-text-face)
 ;;; Interactive Commands
 
 (defun post-save-current-buffer-and-exit ()
-  "Save the current buffer and exit Emacs."
+  "Save the current buffer and exit Emacs or its client session"
   (interactive)
 
   ;; Should the user be prompted for an attachment?
@@ -611,9 +613,9 @@ Argument END End of region to be quoted."
   "Split a quoted paragraph at point, keeping the quote."
   (interactive)
   (let ((quote-string (or quote-string "> ")))
-       (if (save-excursion
-        (beginning-of-line)
-        (looking-at (regexp-quote quote-string)))
+   (if (save-excursion
+         (beginning-of-line)
+         (looking-at (regexp-quote quote-string)))
       (progn
         (let ((spaces (- (point)
                          (save-excursion
@@ -865,8 +867,9 @@ This way they can refer back to this buffer during a compose session."
 ;;; prefer deriving from text mode like mutt mode did. - RR
 (define-derived-mode post-mode text-mode "Post"
   "Major mode for composing email or news with an external agent.
-To customize it, type \\[customize] and select [Applications] [Mail] [Post].
-When you finish editing this message, type \\[post-save-current-buffer-and-exit] to save and exit Emacs.
+To customize it, type \\[customize] and select [Applications]
+[Mail] [Post]. When you finish editing this message, type
+\\[post-save-current-buffer-and-exit] to save and exit Emacs.
 
 \\{post-mode-map}"
 
@@ -944,7 +947,7 @@ When you finish editing this message, type \\[post-save-current-buffer-and-exit]
       (defalias 'post-select-signature-select-sig
 	'post-select-signature-select-sig-from-dir)))
 
-;; Give the buffer a handy name.
+  ;; Give the buffer a handy name.
   (if post-rename-buffer
       (setq post-buf (rename-buffer "*Composing*" t)))
 
