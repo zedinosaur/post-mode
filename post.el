@@ -852,11 +852,6 @@ This way they can refer back to this buffer during a compose session."
   )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; The Heart of Darkness
-;;;
-;;; The old post mode (i.e. Dave Pearson's) derived from mail-mode.  I
-;;; prefer deriving from text mode like mutt mode did. - RR
 (define-derived-mode post-mode text-mode "Post"
   "Major mode for composing email or news with an external agent.
 To customize it, type \\[customize] and select [Applications]
@@ -864,10 +859,6 @@ To customize it, type \\[customize] and select [Applications]
 \\[post-save-current-buffer-and-exit] to save and exit Emacs.
 
 \\{post-mode-map}"
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;
-;;; Neat things to do right off the bat.
 
   (auto-fill-mode (if post-uses-fill-mode 1 0))
 
@@ -901,18 +892,15 @@ To customize it, type \\[customize] and select [Applications]
   (when (boundp 'font-lock-defaults)
      (make-local-variable 'font-lock-defaults))
 
-  (defun post--add-syntax-highlight (face regexps)
-    (set face face)
+  (dolist (x '((post-emoticon-face  post-emoticon-pattern)
+               (post-bold-face      post-bold-pattern)
+               (post-underline-face post-underline-pattern)
+               (post-url-face       post-url-pattern)))
     (nconc post-font-lock-keywords
-    (mapcar
-      (lambda (regexp)
-        (list regexp (list 0 face 't)))
-      regexps)))
-  (post--add-syntax-highlight 'post-emoticon-face nil)
-  (post--add-syntax-highlight 'post-emoticon-face post-emoticon-pattern)
-  (post--add-syntax-highlight 'post-bold-face   post-bold-pattern)
-  (post--add-syntax-highlight 'post-underline-face   post-underline-pattern)
-  (post--add-syntax-highlight 'post-url-face    post-url-pattern)
+      (mapcar
+        (lambda (regexp)
+          (list regexp (list 0 (car x) 't)))
+        (symbol-value (cadr x)))))
 
   (setq font-lock-defaults
 	'(post-font-lock-keywords nil nil nil nil
