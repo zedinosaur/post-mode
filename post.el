@@ -906,24 +906,27 @@ To customize it, type \\[customize] and select [Applications]
   ;(set (make-local-variable 'ispell-skip-region-alist)
   ;		(append ispell-skip-region-alist post-ispell-skip-alist))
 
-  (if (boundp 'font-lock-defaults)
-      (make-local-variable 'font-lock-defaults))
-  (cl-flet ((add-syntax-highlight (face regexps)
-	    (set face face)
-	    (nconc post-font-lock-keywords
-		   (loop for regexp in regexps
-			 collect (list regexp (list 0 face 't))))))
-;			 collect (list regexp `(,0 ',face))))))
-    (add-syntax-highlight 'post-emoticon-face post-emoticon-pattern)
-    (add-syntax-highlight 'post-bold-face   post-bold-pattern)
-    (add-syntax-highlight 'post-underline-face   post-underline-pattern)
-    (add-syntax-highlight 'post-url-face    post-url-pattern))
+  (when (boundp 'font-lock-defaults)
+     (make-local-variable 'font-lock-defaults))
+
+  (defun post--add-syntax-highlight (face regexps)
+    (set face face)
+    (nconc post-font-lock-keywords
+    (mapcar
+      (lambda (regexp)
+        (list regexp (list 0 face 't)))
+      regexps)))
+  (post--add-syntax-highlight 'post-emoticon-face nil)
+  (post--add-syntax-highlight 'post-emoticon-face post-emoticon-pattern)
+  (post--add-syntax-highlight 'post-bold-face   post-bold-pattern)
+  (post--add-syntax-highlight 'post-underline-face   post-underline-pattern)
+  (post--add-syntax-highlight 'post-url-face    post-url-pattern)
+
   (setq font-lock-defaults
 	'(post-font-lock-keywords nil nil nil nil
 				  (font-lock-syntactic-keywords
 				   . post-font-lock-syntactic-keywords)
 				  (font-lock-comment-face
-;				   . 'post-signature-text-face)))
 				   . post-signature-text-face)))
 
   ;; Force pwd to home directory if so required.
