@@ -826,7 +826,7 @@ Argument HEADER the header type."
   (save-excursion
     (let ((value          "")
           (start-of-value nil))
-      (setf (point) (point-min))
+      (goto-char (point-min))
       (when (post-find-header-line header)
         (setq start-of-value (point))
         (end-of-line)
@@ -839,17 +839,17 @@ Argument HEADER the header type."
   (let ((old-point (point))
         (end-of-header nil)
         (found-point nil))
-    (setf (point) (point-min))
+    (goto-char (point-min))
     (search-forward-regexp "^$" nil t)
     (setq end-of-header (point))
-    (setf (point) (point-min))
+    (goto-char (point-min))
     (cond ((search-forward-regexp (concat "^" header ": ") nil t)
            (cond ((< (point) end-of-header)
                   (setq found-point (point)))
                  (t
-                  (setf (point) old-point))))
+                  (goto-char old-point))))
           (t
-           (setf (point) old-point)))
+           (goto-char old-point)))
     found-point))
 
 ;;; Function to make a backup buffer for viewing the original.
@@ -1087,7 +1087,7 @@ Argument ADDRESS email address return receipts should be sent to."
 (defun post-news-posting-p ()
   "Does the buffer look like a news posting?"
   (save-excursion
-    (setf (point) (point-min))
+    (goto-char (point-min))
     (looking-at "^Newsgroups: ")))
 
 (defun header-set-followup-to (to)
@@ -1168,7 +1168,7 @@ Optional argument DEFAULT ."
 (defun header-set-value (header value)
   "Set VALUE of a HEADER (replacing any existing value)."
   (let ((kill-ring kill-ring))
-    (setf (point) (point-min))
+    (goto-char (point-min))
     (cond ((post-find-header-line header)
 	   (beginning-of-line)
 	   (kill-line)
