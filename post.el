@@ -272,7 +272,7 @@
 ;;;
 ;;; Required Packages
 
-(require 'cl)
+(require 'cl-lib)
 (require 'derived)
 (require 'easymenu)
 
@@ -814,7 +814,7 @@ Argument END End of region to be quoted."
   (uncomment-region beg end))
 
 ; From Dave Pearson, July 15, 2000
-(defun* split-quoted-paragraph (&optional (quote-string "> "))
+(cl-defun split-quoted-paragraph (&optional (quote-string "> "))
   "Split a quoted paragraph at point, keeping the quote."
   (interactive)
   (if (save-excursion
@@ -1007,7 +1007,7 @@ Argument HEADER the header type."
   (save-excursion
     (let ((value          "")
           (start-of-value nil))
-      (setf (point) (point-min))
+      (setf (goto-char) (point-min))
       (when (post-find-header-line header)
         (setq start-of-value (point))
         (end-of-line)
@@ -1020,17 +1020,17 @@ Argument HEADER the header type."
   (let ((old-point (point))
         (end-of-header nil)
         (found-point nil))
-    (setf (point) (point-min))
+    (setf (goto-char) (point-min))
     (search-forward-regexp "^$" nil t)
     (setq end-of-header (point))
-    (setf (point) (point-min))
+    (setf (goto-char) (point-min))
     (cond ((search-forward-regexp (concat "^" header ": ") nil t)
            (cond ((< (point) end-of-header)
                   (setq found-point (point)))
                  (t
-                  (setf (point) old-point))))
+                  (setf (goto-char) old-point))))
           (t
-           (setf (point) old-point)))
+           (setf (goto-char) old-point)))
     found-point))
 
 ;;; Function to make a backup buffer for viewing the original.
@@ -1110,10 +1110,10 @@ When you finish editing this message, type \\[post-save-current-buffer-and-exit]
 
   (if (boundp 'font-lock-defaults)
       (make-local-variable 'font-lock-defaults))
-  (flet ((add-syntax-highlight (face regexps)
+  (cl-flet ((add-syntax-highlight (face regexps)
 	    (set face face)
 	    (nconc post-font-lock-keywords
-		   (loop for regexp in regexps
+		   (cl-loop for regexp in regexps
 			 collect (list regexp (list 0 face 't))))))
 ;			 collect (list regexp `(,0 ',face))))))
     (add-syntax-highlight 'post-emoticon-face post-emoticon-pattern)
@@ -1284,7 +1284,7 @@ Argument ADDRESS email address return receipts should be sent to."
 (defun post-news-posting-p ()
   "Does the buffer look like a news posting?"
   (save-excursion
-    (setf (point) (point-min))
+    (setf (goto-char) (point-min))
     (looking-at "^Newsgroups: ")))
 
 (defun header-set-followup-to (to)
@@ -1365,7 +1365,7 @@ Optional argument DEFAULT ."
 (defun header-set-value (header value)
   "Set VALUE of a HEADER (replacing any existing value)."
   (let ((kill-ring kill-ring))
-    (setf (point) (point-min))
+    (setf (goto-char) (point-min))
     (cond ((post-find-header-line header)
 	   (beginning-of-line)
 	   (kill-line)
